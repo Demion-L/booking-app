@@ -18,8 +18,8 @@ const config = {
       },
     },
     fontFamily: {
-      primary: "--font-marcellus",
-      secondary: "--font-urbanist",
+      primary: "var(--font-marcellus)",
+      secondary: "var(--font-urbanist)",
     },
     extend: {
       colors: {

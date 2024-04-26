@@ -4,7 +4,17 @@ import Image from "next/image";
 const Home = () => {
   return (
     <main>
-      <Rooms />
+      <Rooms
+        data={[]}
+        meta={{
+          pagination: {
+            page: 0,
+            pageCount: 0,
+            pageSize: 0,
+            total: 0,
+          },
+        }}
+      />
     </main>
   );
 };
