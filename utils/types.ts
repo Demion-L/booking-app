@@ -1,5 +1,6 @@
 export interface Room {
   id: number;
+  data: any;
   attributes: {
     capacity: number;
     createdAt: string;
@@ -33,5 +34,11 @@ export interface RoomsProps {
       pageSize: number;
       total: number;
     };
+  };
+}
+
+export interface RoomDetailsProps {
+  params: {
+    id: number;
   };
 }
