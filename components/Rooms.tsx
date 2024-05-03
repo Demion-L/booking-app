@@ -1,7 +1,7 @@
 import { getRooms } from "@/lib/api";
 import RoomList from "./RoomList";
 
-import { Room, RoomsProps } from "@/utils/types";
+import { RoomsProps } from "@/utils/types";
 
 const Rooms: React.FC<RoomsProps> = async () => {
   const rooms = await getRooms();
