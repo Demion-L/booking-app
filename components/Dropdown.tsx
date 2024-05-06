@@ -1,6 +1,7 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -10,9 +11,15 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { FaCalendarCheck, FaHome, FaSignInAlt } from "react-icons/fa";
+import {
+  FaCalendarCheck,
+  FaHome,
+  FaSignInAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
-import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+
 import Link from "next/link";
 
 interface DropdownProps {
@@ -24,7 +31,7 @@ const Dropdown: React.FC<DropdownProps> = ({ user }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div>
+        <div className='flex items-center gap-2 cursor-pointer'>
           {/* avatar */}
           <Avatar>
             <AvatarImage src={user?.picture ?? noAvatarSrc} />
@@ -46,7 +53,7 @@ const Dropdown: React.FC<DropdownProps> = ({ user }) => {
         className='w-72 mt-4 p-4 flex flex-col gap-2'
         align='start'>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        <DropdownMenuGroup className='flex flex-col gap-2'>
           <Link href='/'>
             <DropdownMenuItem>
               Homepage
@@ -57,13 +64,23 @@ const Dropdown: React.FC<DropdownProps> = ({ user }) => {
           </Link>
           <Link href='/dashboard'>
             <DropdownMenuItem>
-              Dashboard
+              My Bookings
               <DropdownMenuShortcut className='text-lg text-accent'>
                 <FaCalendarCheck />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+
+        <LogoutLink>
+          <DropdownMenuItem>
+            Log out
+            <DropdownMenuShortcut className='text-lg text-accent'>
+              <FaSignOutAlt />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </LogoutLink>
       </DropdownMenuContent>
     </DropdownMenu>
   );

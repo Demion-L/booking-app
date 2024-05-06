@@ -7,6 +7,7 @@ import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Button } from "./ui/button";
 import Dropdown from "./Dropdown";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
+import MobileNav from "./MobileNav";
 
 const socials = [
   { icon: <FaYoutube />, href: "#" },
@@ -59,20 +60,28 @@ const Header: React.FC = async () => {
           </div>
 
           {/* sign in & sign up btns */}
-          <div>
-            <div>
+          <div className='flex items-center justify-center gap-8 xl:w-max'>
+            <div className='flex items-center gap-2 xl:order-2'>
               {isUserAuthenticated ? (
                 <Dropdown user={user ?? undefined} />
               ) : (
                 <div className='flex gap-2'>
                   <LoginLink>
-                    <Button>Sign in</Button>
+                    <Button variant='primary'>Sign in</Button>
                   </LoginLink>
                   <RegisterLink>
                     <Button>Register</Button>
                   </RegisterLink>
                 </div>
               )}
+            </div>
+            {/* mobile nav */}
+            <div className='xl:hidden'>
+              <MobileNav />
+            </div>
+            {/* destop nav */}
+            <div className='hidden xl:flex'>
+              <Nav />
             </div>
           </div>
         </div>
