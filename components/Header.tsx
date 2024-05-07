@@ -7,7 +7,9 @@ import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Button } from "./ui/button";
 import Dropdown from "./Dropdown";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
+
 import MobileNav from "./MobileNav";
+import Nav from "./Nav";
 
 const socials = [
   { icon: <FaYoutube />, href: "#" },
@@ -81,7 +83,7 @@ const Header: React.FC = async () => {
             </div>
             {/* destop nav */}
             <div className='hidden xl:flex'>
-              <Nav />
+              <Nav const isUserAuthenticated =  />
             </div>
           </div>
         </div>
