@@ -1,4 +1,9 @@
-import { Room, RoomsProps, RoomDetailsProps } from "@/utils/types";
+import {
+  Room,
+  RoomsProps,
+  RoomDetailsProps,
+  IReservations,
+} from "@/utils/types";
 
 export async function getRooms(
   params?: RoomDetailsProps
@@ -38,5 +43,27 @@ export async function getRooms(
         },
       }; // Return empty RoomsProps on error for all rooms
     }
+  }
+}
+
+export async function getReservationData(): Promise<IReservations> {
+  try {
+    const res = await fetch(
+      `http://127.0.0.1:1337/api/reservations?populate=*`,
+      {
+        next: {
+          revalidate: 0,
+        },
+      }
+    );
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+
+    return {
+      data: [],
+      meta: {},
+    };
   }
 }

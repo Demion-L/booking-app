@@ -83,7 +83,7 @@ const Header: React.FC = async () => {
             </div>
             {/* destop nav */}
             <div className='hidden xl:flex'>
-              <Nav const isUserAuthenticated =  />
+              <Nav isUserAuthenticated={isUserAuthenticated} />
             </div>
           </div>
         </div>

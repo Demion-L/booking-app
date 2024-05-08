@@ -42,3 +42,8 @@ export interface RoomDetailsProps {
     id: number;
   };
 }
+
+export interface IReservations {
+  data: Array<{}>;
+  meta: any;
+}

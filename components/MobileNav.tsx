@@ -2,35 +2,9 @@
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
-
 import { FaBars } from "react-icons/fa";
 
-const links = [
-  {
-    name: "Home",
-    path: "/",
-  },
-  {
-    name: "Home",
-    path: "/",
-  },
-  {
-    name: "Restaurant",
-    path: "/",
-  },
-  {
-    name: "Pool",
-    path: "/",
-  },
-  {
-    name: "Best deals",
-    path: "/",
-  },
-  {
-    name: "Contact",
-    path: "/",
-  },
-];
+import { links } from "@/data/links";
 
 const MobileNav: React.FC = () => {
   return (

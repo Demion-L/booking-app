@@ -1,13 +1,19 @@
 import Image from "next/image";
 
-import { getRooms } from "@/lib/api";
-import { RoomDetailsProps } from "@/utils/types";
+import { getReservationData, getRooms } from "@/lib/api";
+import { IReservations, RoomDetailsProps } from "@/utils/types";
 import React from "react";
 import { TbArrowsMaximize, TbUsers } from "react-icons/tb";
+import Reservation from "@/components/Reservation";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const RoomDetails: React.FC<RoomDetailsProps> = async ({ params }) => {
   const { data } = await getRooms({ params });
   const imageUrl = `http://127.0.0.1:1337${data.attributes.image.data.attributes.url}`;
+  const reservations: IReservations = await getReservationData();
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated();
+  const userData = await getUser();
 
   return (
     <section className='min-h-[80vh]'>
@@ -54,8 +60,13 @@ const RoomDetails: React.FC<RoomDetailsProps> = async ({ params }) => {
             </div>
             {/* reservation */}
           </div>
-          <div className='w-full lg:max-w-[360px] h-max bg-green-400'>
-            reservation
+          <div className='w-full lg:max-w-[360px] h-max'>
+            <Reservation
+              reservations={reservations}
+              data={data}
+              isUserAuthenticated={isUserAuthenticated}
+              userData={userData}
+            />
           </div>
         </div>
       </div>
