@@ -1,4 +1,4 @@
-export interface Room {
+export interface IRoom {
   id: number;
   data: any;
   attributes: {
@@ -26,7 +26,7 @@ export interface Room {
 }
 
 export interface RoomsProps {
-  data: Room[];
+  data: IRoom[];
   meta: {
     pagination: {
       page: number;

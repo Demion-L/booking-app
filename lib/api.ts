@@ -1,5 +1,5 @@
 import {
-  Room,
+  IRoom,
   RoomsProps,
   RoomDetailsProps,
   IReservations,
@@ -7,7 +7,7 @@ import {
 
 export async function getRooms(
   params?: RoomDetailsProps
-): Promise<RoomsProps | Room> {
+): Promise<RoomsProps | IRoom> {
   try {
     const baseUrl = `http://127.0.0.1:1337/api/rooms?populate=*`;
     const url = params
@@ -29,7 +29,7 @@ export async function getRooms(
   } catch (error) {
     console.error("Error fetching rooms:", error);
     if (params) {
-      return {} as Room; // Return empty room object on error for specific room
+      return {} as IRoom; // Return empty room object on error for specific room
     } else {
       return {
         data: [],

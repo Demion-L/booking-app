@@ -8,8 +8,8 @@ import Reservation from "@/components/Reservation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const RoomDetails: React.FC<RoomDetailsProps> = async ({ params }) => {
-  const { data } = await getRooms({ params });
-  const imageUrl = `http://127.0.0.1:1337${data.attributes.image.data.attributes.url}`;
+  const { data: roomData } = await getRooms({ params });
+  const imageUrl = `http://127.0.0.1:1337${roomData.attributes.image.data.attributes.url}`;
   const reservations: IReservations = await getReservationData();
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
@@ -33,9 +33,9 @@ const RoomDetails: React.FC<RoomDetailsProps> = async ({ params }) => {
             <div className='flex flex=1 flex-col mb-8'>
               {/* title & price */}
               <div className='flex justify-between items-center mb-4'>
-                <h3 className='h3'>{data?.attributes?.title}</h3>
+                <h3 className='h3'>{roomData?.attributes?.title}</h3>
                 <p className='h3 font-secondary font-medium text-accent'>
-                  {data?.attributes?.price}
+                  {roomData?.attributes?.price}
                   <span className='text-base text-secondary'>/ night</span>
                 </p>
               </div>
@@ -46,26 +46,26 @@ const RoomDetails: React.FC<RoomDetailsProps> = async ({ params }) => {
                     <TbArrowsMaximize />
                   </div>
                   <p>
-                    {data?.attributes?.size} m <sup>2</sup>
+                    {roomData?.attributes?.size} m <sup>2</sup>
                   </p>
                 </div>
                 <div className='flex items-center gap-2'>
                   <div className='text-2xl text-accent'>
                     <TbUsers />
                   </div>
-                  <p>{data?.attributes?.capacity} Guests</p>
+                  <p>{roomData?.attributes?.capacity} Guests</p>
                 </div>
               </div>
-              <p>{data?.attributes?.description}</p>
+              <p>{roomData?.attributes?.description}</p>
             </div>
             {/* reservation */}
           </div>
           <div className='w-full lg:max-w-[360px] h-max'>
             <Reservation
               reservations={reservations}
-              data={data}
               isUserAuthenticated={isUserAuthenticated}
               userData={userData}
+              roomData={roomData}
             />
           </div>
         </div>

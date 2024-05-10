@@ -7,18 +7,18 @@ import Image from "next/image";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Room } from "@/utils/types";
+import { IRoom } from "@/utils/types";
 
 interface RoomListProps {
-  rooms: Room[];
+  rooms: IRoom[];
 }
 
 const RoomList: React.FC<RoomListProps> = ({ rooms }) => {
   const [roomType, setRoomType] = useState("all");
-  const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
+  const [filteredRooms, setFilteredRooms] = useState<IRoom[]>([]);
 
   useEffect(() => {
-    const filtered = rooms.filter((room: Room) => {
+    const filtered = rooms.filter((room: IRoom) => {
       return roomType === "all" ? rooms : roomType === room.attributes.type;
     });
 
