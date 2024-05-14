@@ -13,7 +13,10 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import AlertMessage from "./AlertMessage";
+import { postData } from "@/lib/api";
 
 interface ReservationsProps {
   reservations: IReservations;
@@ -30,6 +33,71 @@ const Reservation: React.FC<ReservationsProps> = ({
 }) => {
   const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckoutDate] = useState<Date>();
+  const [alertMessage, setAllertMessage] = useState<{
+    message: string;
+    type: "error" | "success" | null;
+  } | null>();
+
+  const formatDateForStrapi = (date: Date) => {
+    return format(date, "yyyy-MM-dd");
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAllertMessage(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [alertMessage]);
+
+  const saveReservation = () => {
+    if (!checkInDate || !checkOutDate) {
+      setAllertMessage({
+        message: "Please select check-in and check-out dates",
+        type: "error",
+      });
+    } else if (checkInDate?.getTime() === checkOutDate?.getTime()) {
+      setAllertMessage({
+        message: "Check-in and check-out dates cannot be the same",
+        type: "error",
+      });
+    } else {
+      const isReserved = reservations.data
+        .filter(
+          (item: any) => item.attributes.room.data.id === roomData.data.id
+        )
+        .some((item: any) => {
+          const existingCheckIn = new Date(item.attributes.checkIn).setHours(
+            0,
+            0,
+            0,
+            0
+          );
+          const existingCheckOut = new Date(item.attributes.checkOut).setHours(
+            0,
+            0,
+            0,
+            0
+          );
+
+          const checkInTime = checkInDate?.setHours(0, 0, 0, 0);
+          const checkOutTime = checkOutDate?.setHours(0, 0, 0, 0);
+        });
+
+      const data = {
+        data: {
+          firstname: userData?.family_name,
+          lastname: userData?.given_name,
+          email: userData?.email,
+          checkIn: checkInDate ? formatDateForStrapi(checkInDate) : null,
+          checkOut: checkOutDate ? formatDateForStrapi(checkOutDate) : null,
+          room: roomData.data.id,
+        },
+      };
+
+      postData("http://127.0.0.1:1337/api/reservations", data);
+    }
+  };
 
   return (
     <div>
@@ -97,8 +165,25 @@ const Reservation: React.FC<ReservationsProps> = ({
               />
             </PopoverContent>
           </Popover>
+
+          {/* conditional rendering of the booking button based on an user authentication status */}
+
+          {isUserAuthenticated ? (
+            <Button onClick={() => saveReservation()} size='md'>
+              Book now
+            </Button>
+          ) : (
+            <LoginLink>
+              <Button className='w-full' size='md'>
+                Book now
+              </Button>
+            </LoginLink>
+          )}
         </div>
       </div>
+      {alertMessage && (
+        <AlertMessage message={alertMessage.message} type={alertMessage.type} />
+      )}
     </div>
   );
 };
