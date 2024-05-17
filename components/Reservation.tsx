@@ -3,6 +3,7 @@
 import { IReservations, IRoom } from "@/utils/types";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, isPast } from "date-fns";
@@ -38,6 +39,8 @@ const Reservation: React.FC<ReservationsProps> = ({
     type: "error" | "success" | null;
   } | null>();
 
+  const router = useRouter();
+
   const formatDateForStrapi = (date: Date) => {
     return format(date, "yyyy-MM-dd");
   };
@@ -52,16 +55,18 @@ const Reservation: React.FC<ReservationsProps> = ({
 
   const saveReservation = () => {
     if (!checkInDate || !checkOutDate) {
-      setAllertMessage({
+      return setAllertMessage({
         message: "Please select check-in and check-out dates",
         type: "error",
       });
-    } else if (checkInDate?.getTime() === checkOutDate?.getTime()) {
+    } else if (checkInDate.getTime() === checkOutDate.getTime()) {
       setAllertMessage({
         message: "Check-in and check-out dates cannot be the same",
         type: "error",
       });
     } else {
+      // console.log(reservations);
+
       const isReserved = reservations.data
         .filter(
           (item: any) => item.attributes.room.data.id === roomData.data.id
@@ -80,22 +85,49 @@ const Reservation: React.FC<ReservationsProps> = ({
             0
           );
 
-          const checkInTime = checkInDate?.setHours(0, 0, 0, 0);
-          const checkOutTime = checkOutDate?.setHours(0, 0, 0, 0);
+          const checkInTime = checkInDate.setHours(0, 0, 0, 0);
+          const checkOutTime = checkOutDate.setHours(0, 0, 0, 0);
+
+          const isReservedBetweenDates =
+            (checkInTime >= existingCheckIn &&
+              checkInTime < existingCheckOut) ||
+            (checkOutTime >= existingCheckIn &&
+              checkOutTime < existingCheckOut) ||
+            (existingCheckIn > checkInTime && existingCheckIn < checkOutTime) ||
+            (existingCheckOut > checkInTime &&
+              existingCheckOut <= checkOutTime);
+
+          return isReservedBetweenDates;
         });
 
-      const data = {
-        data: {
-          firstname: userData?.family_name,
-          lastname: userData?.given_name,
-          email: userData?.email,
-          checkIn: checkInDate ? formatDateForStrapi(checkInDate) : null,
-          checkOut: checkOutDate ? formatDateForStrapi(checkOutDate) : null,
-          room: roomData.data.id,
-        },
-      };
+      if (isReserved) {
+        setAllertMessage({
+          message:
+            "This room is already booked for selected dates. Please choose different dates or another room",
+          type: "error",
+        });
+      } else {
+        const data = {
+          data: {
+            firstname: userData?.family_name,
+            lastname: userData?.given_name,
+            email: userData?.email,
+            checkIn: checkInDate ? formatDateForStrapi(checkInDate) : null,
+            checkOut: checkOutDate ? formatDateForStrapi(checkOutDate) : null,
+            room: roomData.data.id,
+          },
+        };
 
-      postData("http://127.0.0.1:1337/api/reservations", data);
+        postData("http://127.0.0.1:1337/api/reservations", data);
+
+        setAllertMessage({
+          message:
+            "Your booking has been successfully confirmed! We are looking forward to welcoming you on your selected dates.",
+          type: "success",
+        });
+
+        router.refresh();
+      }
     }
   };
 

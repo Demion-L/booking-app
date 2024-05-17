@@ -15,6 +15,8 @@ const RoomDetails: React.FC<RoomDetailsProps> = async ({ params }) => {
   const isUserAuthenticated = await isAuthenticated();
   const userData = await getUser();
 
+  console.log(reservations);
+
   return (
     <section className='min-h-[80vh]'>
       <div className='container mx-auto py-8'>
