@@ -68,7 +68,7 @@ export async function getReservationData(): Promise<IReservations> {
   }
 }
 
-export const postData = async (url: string, data: object) => {
+export async function postData(url: string, data: object) {
   const options = {
     method: "POST",
     headers: {
@@ -84,4 +84,21 @@ export const postData = async (url: string, data: object) => {
   } catch (error) {
     console.log("Error: ", error);
   }
-};
+}
+
+export async function deleteData(url: string) {
+  const options = {
+    method: "DElETE",
+    headers: {
+      "Content-Type": "applications/json",
+    },
+  };
+
+  try {
+    const res = await fetch(url, options);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
